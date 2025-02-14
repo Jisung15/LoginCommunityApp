@@ -57,6 +57,11 @@ class LoginActivity : AppCompatActivity() {
 
             hidden = !hidden
         }
+
+        binding.tvLoginPageTitle.setOnLongClickListener {
+            deleteProfile()
+            true
+        }
     }
 
     private fun login(email: String, password: String) {
@@ -72,5 +77,19 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "로그인에 실패하였습니다. 입력을 다시 한 번 확인해 주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun deleteProfile() {
+        val user = auth.currentUser
+        user?.delete()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "회원탈퇴 완료!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, SignUpActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                Toast.makeText(this, "회원탈퇴 실패! : ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
