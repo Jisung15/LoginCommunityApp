@@ -46,7 +46,7 @@ class SignUpActivity : AppCompatActivity() {
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                 } else {
-                    Toast.makeText(this, "회원가입 실패 : ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "회원가입에 실패하였습니다. 입력을 다시 한 번 확인해 주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
     }

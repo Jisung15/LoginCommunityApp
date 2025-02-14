@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                     finish()
                 }
                 else {
-                    Toast.makeText(this, "로그인 실패 : ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "로그인에 실패하였습니다. 입력을 다시 한 번 확인해 주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
