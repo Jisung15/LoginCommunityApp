@@ -2,6 +2,7 @@ package com.example.logincommunityapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ class LoginActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var hidden: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,16 +40,22 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnLoginPageSignUpButton.setOnClickListener {
-            val email = binding.etLoginPageLoginIdText.text.toString()
-            val password = binding.etLoginPagePasswordText.text.toString()
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+        }
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "이메일과 비밀번호 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+        binding.btnHiddenPassword.setOnClickListener {
+            if (hidden) {
+                binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.btnHiddenPassword.text = "비밀번호 보기"
             } else {
-                val intent = Intent(this, SignUpActivity::class.java)
-                startActivity(intent)
+                binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.btnHiddenPassword.text = "비밀번호 숨기기"
             }
+
+            binding.etLoginPagePasswordText.setSelection(binding.etLoginPagePasswordText.text.length)
+
+            hidden = !hidden
         }
     }
 
@@ -61,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                     finish()
                 }
                 else {
-                    Toast.makeText(this, "로그인 실패 : ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "로그인에 실패하였습니다. 입력을 다시 한 번 확인해 주세요.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
