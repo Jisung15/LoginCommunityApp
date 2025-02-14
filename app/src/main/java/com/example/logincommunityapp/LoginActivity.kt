@@ -38,16 +38,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnLoginPageSignUpButton.setOnClickListener {
-            val email = binding.etLoginPageLoginIdText.text.toString()
-            val password = binding.etLoginPagePasswordText.text.toString()
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "이메일과 비밀번호 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            } else {
-                val intent = Intent(this, SignUpActivity::class.java)
-                startActivity(intent)
-            }
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
     }
 
