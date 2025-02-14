@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.logincommunityapp.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,28 +25,44 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        val email = binding.etLoginPageLoginIdText.text
-        val password = binding.etLoginPagePasswordText.text
-
         binding.btnLoginPageLoginButton.setOnClickListener {
+            val email = binding.etLoginPageLoginIdText.text.toString()
+            val password = binding.etLoginPagePasswordText.text.toString()
+
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "이메일과 비밀번호 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
-            } else {
-                Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
             }
+
+            login(email, password)
         }
 
         binding.btnLoginPageSignUpButton.setOnClickListener {
+            val email = binding.etLoginPageLoginIdText.text.toString()
+            val password = binding.etLoginPagePasswordText.text.toString()
+
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "이메일과 비밀번호 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             } else {
                 val intent = Intent(this, SignUpActivity::class.java)
-                intent.putExtra("email", email)
-                intent.putExtra("password", password)
                 startActivity(intent)
             }
         }
+    }
+
+    private fun login(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+                else {
+                    Toast.makeText(this, "로그인 실패 : ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }
