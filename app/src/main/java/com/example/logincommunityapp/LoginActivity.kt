@@ -2,6 +2,7 @@ package com.example.logincommunityapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ class LoginActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private var hidden: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,20 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLoginPageSignUpButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.btnHiddenPassword.setOnClickListener {
+            if (hidden) {
+                binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.btnHiddenPassword.text = "비밀번호 보기"
+            } else {
+                binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.btnHiddenPassword.text = "비밀번호 숨기기"
+            }
+
+            binding.etLoginPagePasswordText.setSelection(binding.etLoginPagePasswordText.text.length)
+
+            hidden = !hidden
         }
     }
 
