@@ -1,6 +1,9 @@
 package com.example.logincommunityapp
 
+import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -33,6 +36,7 @@ class HomeActivity : AppCompatActivity() {
                 post?.let {
                     itemList.add(0, it)
                     adapter.submitList(itemList.toList())
+                    SharedPreferencesUtil.saveItemList(this, itemList)
                 }
             }
         }
@@ -46,6 +50,8 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        itemList.addAll(SharedPreferencesUtil.getItemList(this))
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
@@ -81,6 +87,7 @@ class HomeActivity : AppCompatActivity() {
                         Toast.makeText(this, R.string.post_delete__success_message, Toast.LENGTH_SHORT).show()
                         itemList.remove(item)
                         adapter.submitList(itemList.toList())
+                        SharedPreferencesUtil.saveItemList(this, itemList)
                     }
                     .addOnFailureListener { _ ->
                         Toast.makeText(this, R.string.post_delete_fail_message, Toast.LENGTH_SHORT)
@@ -90,5 +97,25 @@ class HomeActivity : AppCompatActivity() {
             .setNegativeButton(R.string.dialog_no_message) {dialog, _ ->
                 dialog.dismiss()
             }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.app_finish_dialog_title)
+            .setMessage(R.string.app_finish_dialog_message)
+
+        val listener = DialogInterface.OnClickListener { dialog, which ->
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> finishAffinity()
+                DialogInterface.BUTTON_NEGATIVE -> dialog?.dismiss()
+            }
+        }
+
+        builder.setNegativeButton(R.string.dialog_no_message, listener)
+        builder.setPositiveButton(R.string.dialog_yes_message, listener)
+        builder.setOnCancelListener {  }
+
+        builder.show()
     }
 }

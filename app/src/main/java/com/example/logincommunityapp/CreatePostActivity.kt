@@ -1,5 +1,6 @@
 package com.example.logincommunityapp
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -51,6 +52,16 @@ class CreatePostActivity : AppCompatActivity() {
             }
             .addOnFailureListener { _ ->
                 Toast.makeText(this, R.string.post_upload_fail_message, Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+                finish()
             }
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
