@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.registerForActivityResult
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,16 +23,19 @@ class HomeActivity : AppCompatActivity() {
     private val itemList = mutableListOf<Item>()
     private val db = FirebaseFirestore.getInstance()
     private lateinit var adapter: ItemListAdapter
+    private val post = "POST"
+    private val data = "postData"
 
-    private val postData = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val post = result.data?.getParcelableExtra<Item>("postData")
-            post?.let {
-                itemList.add(it)
-                adapter.submitList(itemList.toList())
+    private val postData =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val post = result.data?.getParcelableExtra<Item>(data)
+                post?.let {
+                    itemList.add(0, it)
+                    adapter.submitList(itemList.toList())
+                }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,41 +62,33 @@ class HomeActivity : AppCompatActivity() {
         }
 
         binding.logoutButton.setOnClickListener {
-            Toast.makeText(this, "로그아웃 하였습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.logout_message, Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
-
-        postUpload()
-    }
-
-    private fun postUpload() {
-        db.collection("post")
-            .get()
-            .addOnSuccessListener { result ->
-                itemList.clear()
-                for (document in result) {
-                    val post = document.toObject(Item::class.java)
-                    itemList.add(post)
-                }
-                adapter.submitList(itemList.toList())
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "에러 발생! : $exception", Toast.LENGTH_SHORT).show()
-            }
     }
 
     private fun deletePost(item: Item) {
-        db.collection("posts")
-            .document(item.idText)
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(this, "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-                itemList.remove(item)
-                adapter.submitList(itemList.toList())
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.post_delete_dialog_title)
+            .setMessage(R.string.post_delete_dialog_message)
+            .setPositiveButton(R.string.dialog_yes_message) { _, _ ->
+                db.collection(post)
+                    .document(item.idText)
+                    .delete()
+                    .addOnSuccessListener {
+                        Toast.makeText(this, R.string.post_delete__success_message, Toast.LENGTH_SHORT).show()
+                        itemList.remove(item)
+                        adapter.submitList(itemList.toList())
+                    }
+                    .addOnFailureListener { _ ->
+                        Toast.makeText(this, R.string.post_delete_fail_message, Toast.LENGTH_SHORT)
+                            .show()
+                    }
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "에러 발생! : $exception", Toast.LENGTH_SHORT).show()
+            .setNegativeButton(R.string.dialog_no_message) {dialog, _ ->
+                dialog.dismiss()
             }
     }
 }

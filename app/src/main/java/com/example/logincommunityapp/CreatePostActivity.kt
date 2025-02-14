@@ -14,6 +14,8 @@ class CreatePostActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityCreatePostBinding.inflate(layoutInflater) }
     private val db = FirebaseFirestore.getInstance()
+    private val data = "postData"
+    private val post = "POST"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +40,17 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
     private fun postUpload(item: Item) {
-        val postData = db.collection("posts").document(item.idText)
+        val postData = db.collection(post).document(item.idText)
         postData.set(item)
             .addOnSuccessListener {
-                Toast.makeText(this, "게시글 업로드 완료!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.post_upload_success_message, Toast.LENGTH_SHORT).show()
                 val intent = Intent()
-                intent.putExtra("postData", item)
+                intent.putExtra(data, item)
                 setResult(RESULT_OK, intent)
                 finish()
             }
-            .addOnFailureListener { error ->
-                Toast.makeText(this, "에러 발생! : $error", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { _ ->
+                Toast.makeText(this, R.string.post_upload_fail_message, Toast.LENGTH_SHORT).show()
             }
     }
 }

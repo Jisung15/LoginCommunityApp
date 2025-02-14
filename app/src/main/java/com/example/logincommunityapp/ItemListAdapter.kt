@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logincommunityapp.databinding.CommunitySampleBinding
 
-
 class ItemListAdapter(private val itemList: List<Item>, private val onItemLongClickListener: (Item) -> Unit) : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemDiffCallBack()) {
     class ItemDiffCallBack : DiffUtil.ItemCallback<Item>() {
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
@@ -20,12 +19,12 @@ class ItemListAdapter(private val itemList: List<Item>, private val onItemLongCl
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemListAdapter.ItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val binding = CommunitySampleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ItemListAdapter.ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
         holder.itemView.setOnLongClickListener {
@@ -45,6 +44,4 @@ class ItemListAdapter(private val itemList: List<Item>, private val onItemLongCl
             }
         }
     }
-
-
 }
