@@ -83,11 +83,11 @@ class LoginActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.deleteProfile_dialog_title)
             .setMessage(R.string.deleteProfile_dialog_message)
-            .setPositiveButton(R.string.deleteProfile_dialog_yes_message) { _, _ ->
+            .setPositiveButton(R.string.dialog_yes_message) { _, _ ->
                 deleteProfile()
             }
-            .setNegativeButton(R.string.deleteProfile_dialog_no_message) { _, _ ->
-
+            .setNegativeButton(R.string.dialog_no_message) { dialog, _ ->
+                dialog.dismiss()
             }
 
         builder.create()
