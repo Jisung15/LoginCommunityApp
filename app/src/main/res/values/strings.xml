@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">LoginCommunityApp</string>
+
+    <!--로그인 페이지-->
+    <string name="login_page_title">로그인</string>
+    <string name="login_page_login_id_title">이메일</string>
+    <string name="login_page_password_title">비밀번호</string>
+    <string name="login_button_text">로그인</string>
+    <string name="sign_up_button_text">회원가입</string>
+
 </resources>
