@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -32,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.etLoginPagePasswordText.text.toString()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "이메일과 비밀번호 모두 입력해야 합니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.empty_text_message, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -44,13 +45,13 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.btnHiddenPassword.setOnClickListener {
+        binding.ivHiddenPassword.setOnClickListener {
             if (hidden) {
                 binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                binding.btnHiddenPassword.text = "비밀번호 보기"
+                binding.ivHiddenPassword.setImageResource(R.drawable.hidden)
             } else {
                 binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                binding.btnHiddenPassword.text = "비밀번호 숨기기"
+                binding.ivHiddenPassword.setImageResource(R.drawable.show)
             }
 
             binding.etLoginPagePasswordText.setSelection(binding.etLoginPagePasswordText.text.length)
@@ -58,9 +59,8 @@ class LoginActivity : AppCompatActivity() {
             hidden = !hidden
         }
 
-        binding.tvLoginPageTitle.setOnLongClickListener {
-            deleteProfile()
-            true
+        binding.btnDeleteProfileButton.setOnClickListener {
+            deleteDialog()
         }
     }
 
@@ -68,27 +68,42 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.login_success_message, Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
                 else {
-                    Toast.makeText(this, "로그인에 실패하였습니다. 입력을 다시 한 번 확인해 주세요.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.login_fail_message, Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    private fun deleteDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(R.string.deleteProfile_dialog_title)
+            .setMessage(R.string.deleteProfile_dialog_message)
+            .setPositiveButton(R.string.deleteProfile_dialog_yes_message) { _, _ ->
+                deleteProfile()
+            }
+            .setNegativeButton(R.string.deleteProfile_dialog_no_message) { _, _ ->
+
+            }
+
+        builder.create()
+        builder.show()
     }
 
     private fun deleteProfile() {
         val user = auth.currentUser
         user?.delete()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Toast.makeText(this, "회원탈퇴 완료!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.deleteProfile_success_message, Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, SignUpActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
-                Toast.makeText(this, "회원탈퇴 실패! : ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.deleteProfile_fail_message, Toast.LENGTH_SHORT).show()
             }
         }
     }
