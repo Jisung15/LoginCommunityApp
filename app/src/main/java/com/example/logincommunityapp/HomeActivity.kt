@@ -57,6 +57,12 @@ class HomeActivity : AppCompatActivity() {
             postData.launch(intent)
         }
 
+        binding.logoutButton.setOnClickListener {
+            Toast.makeText(this, "로그아웃 하였습니다.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
         postUpload()
     }
 
