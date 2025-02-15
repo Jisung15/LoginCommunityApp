@@ -12,10 +12,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:hint="제목을 입력하세요."
+        android:hint="@string/idText_hint_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="Autofill,TextFields" />
 
     <EditText
         android:id="@+id/et_post_content"
@@ -23,16 +24,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_marginBottom="16dp"
-        android:hint="내용을 입력하세요."
+        android:hint="@string/content_hint_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_post_title" />
+        app:layout_constraintTop_toBottomOf="@id/et_post_title"
+        tools:ignore="Autofill,TextFields" />
 
     <Button
         android:id="@+id/btn_add_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="게시글 추가"
+        android:text="@string/content_add_button_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_post_content" />
