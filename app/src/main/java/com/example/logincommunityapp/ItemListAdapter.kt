@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.logincommunityapp.databinding.CommunitySampleBinding
 
 class ItemListAdapter(private val itemList: List<Item>, private val onItemLongClickListener: (Item) -> Unit) : ListAdapter<Item, ItemListAdapter.ItemViewHolder>(ItemDiffCallBack()) {
     class ItemDiffCallBack : DiffUtil.ItemCallback<Item>() {
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem == newItem
+            return oldItem.idText == newItem.idText
         }
 
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
@@ -36,7 +37,9 @@ class ItemListAdapter(private val itemList: List<Item>, private val onItemLongCl
     class ItemViewHolder(private val binding: CommunitySampleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Item) {
             with(binding) {
-                ivProfileImage.setImageResource(item.profileImage)
+                Glide.with(itemView.context)
+                    .load(item.profileImage)
+                    .into(ivProfileImage)
                 textView.text = item.idText
                 textMain.text = item.content
                 tvHeart.text = item.heartCount
