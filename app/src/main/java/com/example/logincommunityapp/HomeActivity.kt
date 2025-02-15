@@ -3,13 +3,10 @@ package com.example.logincommunityapp
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.registerForActivityResult
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,7 +15,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.logincommunityapp.databinding.ActivityHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 
 class HomeActivity : AppCompatActivity() {
 
@@ -51,16 +47,18 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
 
-        itemList.addAll(SharedPreferencesUtil.getItemList(this))
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+        val savedItemList = SharedPreferencesUtil.getItemList(this)
+        itemList.clear()
+        itemList.addAll(savedItemList)
 
         adapter = ItemListAdapter(itemList) { item ->
             deletePost(item)
         }
-
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         binding.recyclerView.adapter = adapter
+
+        adapter.submitList(itemList.toList())
 
         binding.floatingButton.setOnClickListener {
             val intent = Intent(this, CreatePostActivity::class.java)
@@ -69,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
 
         binding.logoutButton.setOnClickListener {
             Toast.makeText(this, R.string.logout_message, Toast.LENGTH_SHORT).show()
+            SharedPreferencesUtil.saveItemList(this, itemList)
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
@@ -86,7 +85,8 @@ class HomeActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         Toast.makeText(this, R.string.post_delete__success_message, Toast.LENGTH_SHORT).show()
                         itemList.remove(item)
-                        adapter.submitList(itemList.toList())
+                        val updatedList = ArrayList(itemList)
+                        adapter.submitList(updatedList)
                         SharedPreferencesUtil.saveItemList(this, itemList)
                     }
                     .addOnFailureListener { _ ->
@@ -97,6 +97,7 @@ class HomeActivity : AppCompatActivity() {
             .setNegativeButton(R.string.dialog_no_message) {dialog, _ ->
                 dialog.dismiss()
             }
+        builder.show()
     }
 
     @SuppressLint("MissingSuperCall")
