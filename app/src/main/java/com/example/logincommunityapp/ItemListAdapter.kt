@@ -17,7 +17,6 @@ class ItemListAdapter(private val itemList: List<Item>, private val onItemLongCl
         override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
             return oldItem == newItem
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {

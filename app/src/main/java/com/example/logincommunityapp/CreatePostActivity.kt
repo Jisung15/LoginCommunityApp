@@ -92,9 +92,7 @@ class CreatePostActivity : AppCompatActivity() {
 
         try {
             val stream = FileOutputStream(file)
-
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
             stream.close()
         } catch (e: IOException) {
             e.printStackTrace()

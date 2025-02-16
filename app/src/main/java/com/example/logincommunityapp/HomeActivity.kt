@@ -51,9 +51,8 @@ class HomeActivity : AppCompatActivity() {
         itemList.clear()
         itemList.addAll(savedItemList)
 
-        adapter = ItemListAdapter(itemList) { item ->
-            deletePost(item)
-        }
+        adapter = ItemListAdapter(itemList) { item -> deletePost(item) }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         binding.recyclerView.adapter = adapter
@@ -90,8 +89,7 @@ class HomeActivity : AppCompatActivity() {
                         SharedPreferencesUtil.saveItemList(this, itemList)
                     }
                     .addOnFailureListener { _ ->
-                        Toast.makeText(this, R.string.post_delete_fail_message, Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, R.string.post_delete_fail_message, Toast.LENGTH_SHORT).show()
                     }
             }
             .setNegativeButton(R.string.dialog_no_message) {dialog, _ ->
