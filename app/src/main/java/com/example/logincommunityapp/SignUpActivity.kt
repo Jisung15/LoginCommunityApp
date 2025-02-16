@@ -27,7 +27,8 @@ class SignUpActivity : AppCompatActivity() {
             insets
         }
 
-        binding.btnSignUpPageLoginButton.setOnClickListener {
+        // 회원가입 완료 버튼
+        binding.btnSignUpPageClearButton.setOnClickListener {
             val email = binding.etSignUpPageLoginIdText.text.toString()
             val password = binding.etSignUpPagePasswordText.text.toString()
 
@@ -39,6 +40,7 @@ class SignUpActivity : AppCompatActivity() {
             signUp(email, password)
         }
 
+        // 비밀번호 숨기기 기능
         binding.ivHiddenPassword.setOnClickListener {
             if (hidden) {
                 binding.etSignUpPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -54,6 +56,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    // 회원가입 완료 여부 메소드
     private fun signUp(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->

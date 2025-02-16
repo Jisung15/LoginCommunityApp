@@ -33,6 +33,7 @@ class ItemListAdapter(private val itemList: List<Item>, private val onItemLongCl
         }
     }
 
+    // ViewHolder에 Data binding하기
     class ItemViewHolder(private val binding: CommunitySampleBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Item) {
             with(binding) {

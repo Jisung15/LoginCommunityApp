@@ -28,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        // 로그인 버튼 누르면 로그인
         binding.btnLoginPageLoginButton.setOnClickListener {
             val email = binding.etLoginPageLoginIdText.text.toString()
             val password = binding.etLoginPagePasswordText.text.toString()
@@ -40,11 +41,13 @@ class LoginActivity : AppCompatActivity() {
             login(email, password)
         }
 
+        // 회원가입 버튼 누르면 회원가입 페이지로 이동
         binding.btnLoginPageSignUpButton.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
+        // 비밀번호 숨기기 기능
         binding.ivHiddenPassword.setOnClickListener {
             if (hidden) {
                 binding.etLoginPagePasswordText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -59,11 +62,13 @@ class LoginActivity : AppCompatActivity() {
             hidden = !hidden
         }
 
+        // 회원탈퇴 기능
         binding.btnDeleteProfileButton.setOnClickListener {
             deleteDialog()
         }
     }
 
+    // 로그인 성공 여부 확인 메소드
     private fun login(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
@@ -79,6 +84,7 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    // 회원 탈퇴 기능 메소드
     private fun deleteDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.deleteProfile_dialog_title)
@@ -94,6 +100,7 @@ class LoginActivity : AppCompatActivity() {
         builder.show()
     }
 
+    // 회원 탈퇴 성공 여부 메소드
     private fun deleteProfile() {
         val user = auth.currentUser
         user?.delete()?.addOnCompleteListener { task ->
