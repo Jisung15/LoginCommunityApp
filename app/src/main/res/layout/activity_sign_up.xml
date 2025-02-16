@@ -38,7 +38,8 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_sign_up_page_login_id_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_sign_up_page_login_id_title"
-        app:layout_constraintTop_toTopOf="@id/tv_sign_up_page_login_id_title" />
+        app:layout_constraintTop_toTopOf="@id/tv_sign_up_page_login_id_title"
+        tools:ignore="Autofill,LabelFor" />
 
     <TextView
         android:id="@+id/tv_sign_up_page_password_title"
@@ -61,7 +62,8 @@
         app:layout_constraintBottom_toBottomOf="@id/tv_sign_up_page_password_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_sign_up_page_password_title"
-        app:layout_constraintTop_toTopOf="@id/tv_sign_up_page_password_title" />
+        app:layout_constraintTop_toTopOf="@id/tv_sign_up_page_password_title"
+        tools:ignore="Autofill,LabelFor" />
 
     <ImageView
         android:id="@+id/iv_hidden_password"
@@ -71,10 +73,11 @@
         android:layout_marginEnd="10dp"
         android:src="@drawable/hidden"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_sign_up_page_password_text" />
+        app:layout_constraintTop_toBottomOf="@id/et_sign_up_page_password_text"
+        tools:ignore="ContentDescription" />
 
     <Button
-        android:id="@+id/btn_sign_up_page_login_button"
+        android:id="@+id/btn_sign_up_page_clear_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"

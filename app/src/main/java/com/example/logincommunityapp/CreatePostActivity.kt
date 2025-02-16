@@ -26,6 +26,7 @@ class CreatePostActivity : AppCompatActivity() {
     private val data = "postData"
     private val post = "POST"
 
+    // 이미지 관련 registerForActivityResult
     private val getImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             binding.ivProfileImage.setImageURI(it)
@@ -42,10 +43,12 @@ class CreatePostActivity : AppCompatActivity() {
             insets
         }
 
+        // 이미지 뷰 클릭 시 갤러리에서 사진 가져오기
         binding.ivProfileImage.setOnClickListener {
             getImage.launch("image/*")
         }
 
+        // 그렇게 해서 가져온 사진과 게시글 작성 내용을 올리기
         binding.btnAddPost.setOnClickListener {
             val idText = binding.etPostTitle.text.toString()
             val content = binding.etPostContent.text.toString()
@@ -60,6 +63,7 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
+    // 게시글 업로드하는 메소드
     private fun postUpload(item: Item) {
         val postData = db.collection(post).document(item.idText)
         postData.set(item)
@@ -78,6 +82,7 @@ class CreatePostActivity : AppCompatActivity() {
             }
     }
 
+    // 이것도 잘 모르겠다
     private fun saveImageToStorage(bitmap: Bitmap): String {
         val imageUri = saveToInternalStorage(bitmap)
         return imageUri.toString()
@@ -92,9 +97,7 @@ class CreatePostActivity : AppCompatActivity() {
 
         try {
             val stream = FileOutputStream(file)
-
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-
             stream.close()
         } catch (e: IOException) {
             e.printStackTrace()
@@ -103,6 +106,7 @@ class CreatePostActivity : AppCompatActivity() {
         return Uri.fromFile(file)
     }
 
+    // 뒤로 가기 하면 메인 화면으로 되돌아가기
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val intent = Intent(this, HomeActivity::class.java)

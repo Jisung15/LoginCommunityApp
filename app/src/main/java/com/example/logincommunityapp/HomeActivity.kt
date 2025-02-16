@@ -25,6 +25,7 @@ class HomeActivity : AppCompatActivity() {
     private val post = "POST"
     private val data = "postData"
 
+    // 게시글 작성 화면에서 작성한 데이터를 갖고 와서 메인 화면에 표시
     private val postData =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -47,24 +48,26 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
 
+        // 앱 재시작 시 지금까지 올린 게시글 목록 표시 & RecyclerView의 adapter 설정
         val savedItemList = SharedPreferencesUtil.getItemList(this)
         itemList.clear()
         itemList.addAll(savedItemList)
 
-        adapter = ItemListAdapter(itemList) { item ->
-            deletePost(item)
-        }
+        adapter = ItemListAdapter(itemList) { item -> deletePost(item) }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         binding.recyclerView.adapter = adapter
 
         adapter.submitList(itemList.toList())
 
+        // 게시글 작성 페이지로 가는 버튼
         binding.floatingButton.setOnClickListener {
             val intent = Intent(this, CreatePostActivity::class.java)
             postData.launch(intent)
         }
 
+        // 로그아웃 버튼 누르면 로그인 페이지로
         binding.logoutButton.setOnClickListener {
             Toast.makeText(this, R.string.logout_message, Toast.LENGTH_SHORT).show()
             SharedPreferencesUtil.saveItemList(this, itemList)
@@ -74,6 +77,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    // 게시글 길게 누르면 삭제 여부 묻는 다이얼로그 등장
     private fun deletePost(item: Item) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(R.string.post_delete_dialog_title)
@@ -90,8 +94,7 @@ class HomeActivity : AppCompatActivity() {
                         SharedPreferencesUtil.saveItemList(this, itemList)
                     }
                     .addOnFailureListener { _ ->
-                        Toast.makeText(this, R.string.post_delete_fail_message, Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this, R.string.post_delete_fail_message, Toast.LENGTH_SHORT).show()
                     }
             }
             .setNegativeButton(R.string.dialog_no_message) {dialog, _ ->
@@ -100,6 +103,7 @@ class HomeActivity : AppCompatActivity() {
         builder.show()
     }
 
+    // 뒤로 가기 하면 앱 종료
     @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(this)
